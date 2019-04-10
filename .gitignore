@@ -1,0 +1,8 @@
+node_modules/
+output/
+/src/config/dev.ts
+excels/
+db/
+/yetm
+*.js
+.vscode/launch.json

@@ -1,0 +1,39 @@
+{
+    "companyId": 1000,
+    "status": "actived",
+    "children": [
+        {
+            "label": "硬装",
+            "classId": [
+                1,
+                2
+            ]
+        },
+        {
+            "label": "软装",
+            "children": [
+                {
+                    "label": "家具",
+                    "classId": [
+                        3
+                    ]
+                },
+                {
+                    "label": "灯具",
+                    "classId": [
+                        4,
+                        5,
+                        6
+                    ]
+                },
+                {
+                    "label": "家电",
+                    "classId": [
+                        9,
+                        10
+                    ]
+                }
+            ]
+        }
+    ]
+}

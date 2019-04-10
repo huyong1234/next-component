@@ -1,0 +1,822 @@
+swagger: '2.0'
+info:
+  description: >-
+    班筑“构件库”接口描述文档
+  version: 0.0.1
+  title: Nestsoft component
+  contact:
+    name: "to < 刘志柱 >"
+    email: mufeng134@gmail.com
+host: localhost:3000
+basePath: /
+tags:
+  - name: componentGroup
+    description: 构件分组
+  - name: component
+    description: 构件
+  - name: tag
+    description: 标签
+schemes:
+  - http
+paths:
+  /component/group:
+    get:
+      tags:
+        - componentGroup
+      summary: "获取构件分组列表"
+      description: ''
+      operationId: getComponentGroup
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ComponentGroup'
+    post:
+      tags:
+        - componentGroup
+      summary: "新建构件分组"
+      description: ''
+      operationId: addAttribute
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: "新建构件分组参数"
+          required: true
+          schema:
+            $ref: '#/definitions/NewComponentGroup'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+    put:
+      tags:
+        - componentGroup
+      summary: "更新构件分组"
+      description: ''
+      operationId: updateComponentGroup
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: "新建构件分组参数"
+          required: true
+          schema:
+            $ref: '#/definitions/GroupInfoToUpdate'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+    delete:
+      tags:
+        - componentGroup
+      summary: "构件分组删除"
+      description: ''
+      operationId: deleteComponentGroup
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              componentGroupId:
+                type: integer
+                format: int32
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+  /component/group/tree:
+    get:
+      tags:
+        - componentGroup
+      summary: "获取构件分组层级结构"
+      description: ''
+      operationId: getComponentGroupTree
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ComponentGroupTree'
+  /component/group/classes:
+    put:
+      tags:
+        - componentGroup
+      summary: "构件分组绑定系统分类"
+      description: ''
+      operationId: updateBindedClasses
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: "新增的属性对象"
+          required: true
+          schema:
+            $ref: '#/definitions/ClassToBind'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+    delete:
+      tags:
+        - componentGroup
+      summary: "构件分组删除系统分类"
+      description: ''
+      operationId: deleteBindedClasses
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ClassToDelete'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+    get:
+      tags:
+        - componentGroup
+      summary: "获取构件分组绑定系统分类"
+      description: ''
+      operationId: getBindedClasses
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: componentGroupId
+          in: query
+          description: "构件分组"
+          type: number
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/BindedClass'
+              msg:
+                type: "string"
+  /component:
+    post:
+      tags:
+        - component
+      summary: "新建构件"
+      description: ''
+      operationId: addComponent
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: "新建构件参数"
+          required: true
+          schema:
+            $ref: '#/definitions/NewComponent'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              data:
+                type: object
+                properties:
+                  componentId:
+                    type: number
+                    description: "新建构件ID"
+              msg:
+                type: "string"
+    get:
+      tags:
+        - component
+      summary: "获取构件列表"
+      description: ''
+      operationId: getComponent
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: origin
+          in: query
+          type: number
+          description: "提交企业id"
+        - name: search
+          in: query
+          type: string
+          description: "搜索字符串"
+        - name: componentId
+          in: query
+          type: number
+        - name: componentIds
+          in: query
+          type: array
+          items:
+            type: number
+        - name: groupId
+          in: query
+          type: number
+        - name: status
+          in: query
+          type: string
+        - name: classIds
+          in: query
+          type: array
+          items:
+            type: number
+        - name: classId
+          in: query
+          type: number
+        - name: beginTime
+          in: query
+          type: number
+          description: "创建构件的时间戳，毫秒"
+        - name: endTime
+          in: query
+          type: number
+          description: "创建构件的时间戳，毫秒"
+        - name: tags
+          in: query
+          type: array
+          items:
+            type: string
+        - name: tag
+          in: query
+          type: string
+        - name: author
+          in: query
+          type: string
+          description: "构件创建者"
+        - name: approver
+          in: query
+          type: string
+          description: "构件审批人"
+        - name: begin
+          in: query
+          type: number
+          description: "提交构件上架的时间戳，毫秒"
+        - name: end
+          in: query
+          type: number
+          description: "提交构件上架的时间戳，毫秒"
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/NewComponent'
+              msg:
+                type: "string"
+  /component/attribute:
+    put:
+      tags:
+        - component
+      summary: "输入构件属性"
+      description: ''
+      operationId: putComponentAttribute
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: "新增的属性对象"
+          required: true
+          schema:
+            $ref: '#/definitions/ComponentAttribute'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+  /component/group/count:
+    get:
+      tags:
+        - component
+      summary: "获取构件分组中构件数量"
+      description: ''
+      operationId: countComponentInGroup
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: search
+          in: query
+          type: string
+          description: "搜索字符串"
+        - name: componentId
+          in: query
+          type: number
+        - name: componentIds
+          in: query
+          type: array
+          items:
+            type: number
+        - name: groupId
+          in: query
+          type: number
+        - name: status
+          in: query
+          type: string
+        - name: classIds
+          in: query
+          type: array
+          items:
+            type: number
+        - name: classId
+          in: query
+          type: number
+        - name: beginTime
+          in: query
+          type: number
+          description: "创建构件的时间戳，毫秒"
+        - name: endTime
+          in: query
+          type: number
+          description: "创建构件的时间戳，毫秒"
+        - name: tags
+          in: query
+          type: array
+          items:
+            type: string
+        - name: tag
+          in: query
+          type: string
+        - name: author
+          in: query
+          type: string
+          description: "构件创建者"
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              data:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/definitions/ComponentGroup'
+                  countMap:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          description: "构件分组id"
+                        count:
+                          type: number
+                          description: "构件数量"
+              msg:
+                type: "string"
+  /component/publishing:
+    post:
+      tags:
+        - component
+      summary: "申请构件上架"
+      description: ''
+      operationId: publishComponent
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: "新增的属性对象"
+          required: true
+          schema:
+            $ref: '#/definitions/ComponentToPublish'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+  /component/approve:
+    put:
+      tags:
+        - component
+      summary: "构件审批"
+      description: ''
+      operationId: approveComponent
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: "新增的属性对象"
+          required: true
+          schema:
+            $ref: '#/definitions/ApproveComponent'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+  /component/deprecate:
+    put:
+      tags:
+        - component
+      summary: "构件下架"
+      description: ''
+      operationId: deprecateComponent
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              componentIds:
+                type: array
+                items:
+                  type: number
+                description: "构件ID"
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+  /component/approver:
+    get:
+      tags:
+        - component
+      summary: "获取构件审批人列表"
+      description: ''
+      operationId: getApprover
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    approver:
+                      type:   string
+                      description: "构件审批人"
+              msg:
+                type: "string"
+  /tag/history:
+    get:
+      tags:
+        - tag
+      summary: "获取历史标签"
+      description: ''
+      operationId: getTagHistory
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              data:
+                type: array
+                items:
+                  type: string
+                example: ["中国风","复古风"]
+              msg:
+                type: "string"
+definitions:
+  ApproveComponent:
+    type: object
+    properties:
+      componentIds:
+        type: array
+        items:
+          type: number
+        description: "构件ID"
+      opinion:
+        type: string
+        description: "审批意见"
+      status:
+        type: string
+        example: "rejected | fulfilled"
+        description: "审批结果"
+  ComponentToPublish:
+    type: object
+    properties:
+      componentIds:
+        type: array
+        items:
+          type: number
+        description: "构件ID"
+      sharing:
+        type: boolean
+        description: "共享至公共库"
+  ComponentAttribute:
+    type: object
+    properties:
+      componentId:
+        type: number
+        description: "构件id"
+      attr:
+        type: array
+        items:
+          type: object
+          properties:
+            attributeId:
+              type: number
+              description: "属性id"
+            name:
+              type: string
+              description: "属性名称"
+            value:
+              type: string
+              description: "属性值"
+        description: "所属构件属性值集合"
+  NewComponent:
+    type: object
+    properties:
+      code:
+        type: string
+        description: "构件编码"
+      name:
+        type: string
+        description: "构件名称"
+      preview:
+        type: array
+        items:
+          type: string
+        description: "构件预览图"
+      groupIds:
+        type: array
+        items:
+          type: number
+        description: "所属构件分组ID"
+      classIds:
+        type: array
+        items:
+          type: number
+        description: "绑定的系统分类版本ID"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "标签集合"
+      models:
+        type: object
+        properties:
+          cadModel:
+            type: string
+            description: "cadModel uuid"
+          maxModel:
+            type: string
+            description: "maxModel uuid"
+          texture:
+            type: string
+            description: "texture uuid"
+          threeView:
+            type: string
+            description: "threeView uuid"
+          nodeDiagram:
+            type: string
+            description: "nodeDiagram uuid"
+  GroupInfoToUpdate:
+    type: object
+    properties:
+      componentGroupId:
+        type: number
+        description: "构件分组ID"
+      name:
+        type: string
+        description: "构件分组新名称"
+      order:
+        type: string
+        description: "构件分组新序号"
+      parentId:
+        type: number
+        example: null | 1
+  BindedClass:
+    type: object
+    properties:
+      id:
+        type: number
+        description: "系统类版本ID"
+      groupId:
+        type: number
+        description: "构件分组ID"
+      order:
+        type: string
+        description: "序号"
+      version:
+        type: number
+        description: "版本"
+      ClientClass:
+        type: object
+        properties:
+          name:
+            type: string
+            description: "系统类名称"
+  ClassToDelete:
+    type: object
+    properties:
+      componentGroupId:
+        type: number
+        description: "构件分组ID"
+      toDeleteClassId:
+        type: number
+        description: "系统类版本ID"
+  ClassToBind:
+    type: object
+    properties:
+      componentGroupId:
+        type: number
+        description: "构件分组ID"
+      classIds:
+        type: array
+        description: "系统类最新版本ID"
+        items:
+          type: number
+  NewComponentGroup:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "构件分组名称"
+      parentId:
+        type: number
+        description: "父分组ID"
+      order:
+        type: string
+        description: "序号"
+  ComponentGroupTree:
+    type: object
+    properties:
+      id:
+        type: number
+        description: "构件分组ID"
+      name:
+        type: string
+        description: "构件分组名称"
+      parentId:
+        type: number
+        description: "父分组ID"
+      order:
+        type: string
+        description: "序号"
+      classIds:
+        type: array
+        description: "构件分组绑定的系统分类ID"
+        items:
+          type: number
+          example: 1
+      owner:
+        type: number
+        description: "所属ID"
+      ComponentGroups:
+        type: array
+        items:
+          $ref: '#/definitions/ComponentGroupTree'
+  ComponentGroup:
+    type: object
+    properties:
+      id:
+        type: number
+        description: "构件分组ID"
+      name:
+        type: string
+        description: "构件分组名称"
+      parentId:
+        type: number
+        description: "父分组ID"
+      order:
+        type: string
+        description: "序号"
+      classIds:
+        type: array
+        description: "构件分组绑定的系统分类ID"
+        items:
+          type: number
+          example: 1
+      owner:
+        type: number
+        description: "所属ID"
+  

@@ -1,0 +1,70 @@
+before_script:
+image: docker.xingfuli.me/nestsoft/node:8-alpine
+
+cache:
+  untracked: true
+  paths:
+  - node_modules/
+
+stages:
+  - lint
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - yarn config set registry https://nexus.xingfuli.me/repository/npm/
+    - yarn install
+    - yarn tsc
+    
+lint:
+  stage: lint
+  except:
+    - develop
+    - master
+  script: 
+    - yarn config set registry https://nexus.xingfuli.me/repository/npm/
+    - yarn install
+    - set +o pipefail
+    - >
+      git diff --name-only $(git merge-base origin/$CI_COMMIT_REF_NAME origin/develop) | grep -E "\.tsx?$" | grep -v -E "^__test__/" | 
+      { 
+      files="";
+      while read file;
+      do 
+      files="$files $file";
+      done;
+      echo lint $files;
+      if [ -z "$files" ];
+      then true;
+      else 
+      yarn lint:strict $files;
+      fi;
+      }
+    - set -o pipefail    
+    - echo "lint ok"
+
+# test:
+#   stage: test
+#   script:
+#     - npm run cli ../test/test.json -- --no-render --no-reset-resolution
+#     - set +o pipefail
+#     - >
+#       grep -vwf "./test/test.vrscene" "./output/out.vrscene" |
+#       {
+#       num=0;
+#       while read line;
+#       do
+#       echo $line;
+#       num=`expr $num + 1`;
+#       if [ $num -gt 2 ]; then 
+#       echo "failed";
+#       exit 1;
+#       fi;
+#       done;
+#       }
+#     - set -o pipefail
+#     - echo "test ok"
+

@@ -1,0 +1,638 @@
+swagger: '2.0'
+info:
+  description: >-
+    班筑“构件库”接口描述文档
+  version: 2.0.0
+  title: Nestsoft component
+  contact:
+    name: "to < 刘志柱 >"
+    email: mufeng134@gmail.com
+host: localhost:3000
+basePath: /
+tags:
+  - name: attribute
+    description: 类属性相关
+  - name: class
+    description: 构件类
+  - name: version
+    description: 类属性版本
+schemes:
+  - http
+paths:
+  /attribute/type:
+    get:
+      tags:
+        - attribute
+      summary: "获取所有属性类型列表"
+      description: ''
+      operationId: getAttributeType
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              data:
+                type: array
+                items:
+                  type: string
+                example: ["布置", "设计", "维护"]
+              msg:
+                type: "string"
+                example: "ok"
+  /attribute/group:
+    get:
+      tags:
+        - attribute
+      summary: "获取所有属性分组列表"
+      description: ''
+      operationId: getAttributeGroup
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              data:
+                type: array
+                items:
+                  type: string
+                example: ["截面属性", "标高属性", "材质属性", "施工属性", "图形属性", "效果属性"]
+              msg:
+                type: "string"
+                example: "ok"
+  /attribute:
+    post:
+      tags:
+        - attribute
+      summary: "新建构件属性"
+      description: ''
+      operationId: addAttribute
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: "新增的属性对象"
+          required: true
+          schema:
+            $ref: '#/definitions/Attribute'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+    get:
+      tags:
+        - attribute
+      summary: "获取属性列表"
+      description: ''
+      operationId: getAttribute
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: parameterGroup
+          in: query
+          description: "属性所属分组"
+          type: string
+        - name: attributeTypes
+          in: query
+          type: array
+          items:
+            type: string
+          description: "get /attribute/type 接口返回值"
+        - name: parameterType
+          in: query
+          type: string
+          description: "属性值类型number or string"
+        - name: pageIndex
+          in: query
+          type: number
+        - name: pageSize
+          in: query
+          type: number
+        - name: name
+          in: query
+          type: string
+        - name: asc
+          in: query
+          type: string
+        - name: desc
+          in: query
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Attribute'
+              msg:
+                type: "string"
+  /class/group:
+    post:
+      tags:
+        - class
+      summary: "新增类分组"
+      description: ''
+      operationId: addClassGroup
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ClassGroup'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+  /class:
+    post:
+      tags:
+        - class
+      summary: "新增类"
+      description: ''
+      operationId: addClientClass
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ClientClass'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+  /class/tree:
+    get:
+      tags:
+        - class
+      summary: "获取所有属性分组树"
+      description: ''
+      operationId: getClassTree
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/ClassTree'
+              msg:
+                type: "string"
+  /class/attributes:
+    get:
+      tags:
+        - class
+      summary: "获取所有属性分组树"
+      description: ''
+      operationId: getClassAttributes
+      produces:
+        - application/json
+      parameters:
+        - name: classVersionId
+          in: query
+          required: true
+          description: "指定版本的classId"
+          type: number
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/ClassAttribute'
+              msg:
+                type: "string"
+  /version:
+    get:
+      tags:
+        - version
+      summary: "获取类属性版本"
+      description: ''
+      operationId: getVersion
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: version
+          in: query
+          type: number
+          description: "类属性版本号"
+        - name: published
+          in: query
+          type: boolean
+          description: "类属性是否发布"
+        - name: clientVersion
+          in: query
+          type: number
+          description: "客户端软件版本号"
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Version'
+              msg:
+                type: "string"
+    post:
+      tags:
+        - version
+      summary: "新增类"
+      description: ''
+      operationId: addVersion
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/NewVersion'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 0
+              msg:
+                type: "string"
+definitions:
+  NewVersion:
+    type: object
+    properties:
+      newVersion:
+        type: number
+        description: '新版本号'
+      publishedVersion:
+        type: number
+        description: '已发布版本号'
+      comment:
+        type: string
+        description: '备注'
+  Version:
+    type: object
+    properties:
+      version:
+        type: number
+      published:
+        type: boolean
+      comment:
+        type: string
+      ClientVersions:
+        type: array
+        items:
+          type: object
+          properties:
+            clientVersion:
+              type: number
+  Mask:
+    type: object
+    properties:
+      type:
+        type: string
+        example: "布置属性"
+        description: "属性类型"
+      mask:
+        type: integer
+        example: 1
+        description: "属性掩码"
+  Attribute:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "墙厚"
+        description: "构件属性名称"
+      parameterName:
+        type: string
+        example: "qiangHou"
+        description: "构件属性name"
+      parameterGroup:
+        type: string
+        example: "jiemian"
+        description: "构件属性分组"
+      parameterType:
+        type: string
+        example: "number"
+        description: "构件属性的值的类型"
+        enum:
+          - number
+          - string
+      attributeTypes:
+        type: array
+        items:
+          type: string
+        example: ["布置属性", "设计属性"]
+        description: "get /attribute/type 接口返回值"
+      controlShape:
+        type: string
+        description: "控件外形"
+      valueRange:
+        type: object
+        properties:
+          min:
+            type: integer
+          max:
+            type: integer
+          options:
+            type: array
+            items:
+              type: number
+          customize:
+            type: boolean  
+        description: "[可选项] 构件属性值支持的取值范围"
+        example: "{min: 100, max: 200, options: [number | string], customize: boolean}"
+      fixed: 
+        type: boolean
+        default: false
+        description: "是否是只读属性, 默认值: false"
+      comment:
+        type: string
+        description: "该属性的描述"
+  ClassGroup:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "硬装"
+        description: "类分组名称"
+      parentId:
+        type: number
+        example: 1 || null
+        description: "父分组ID"
+      order:
+        type: string
+        example: "01"
+        description: "分组序号"
+      version:
+        type: number
+        example: 1
+        description: "分类属性版本号"
+  ClientClass:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "墙面"
+        description: "类名称"
+      classId:
+        type: number
+        example: 123
+        description: "客户端软件的类ID"
+      groupId:
+        type: number
+        example: 1
+        description: "所属分组ID"
+      order:
+        type: string
+        example: "01"
+        description: "类序号"
+      version:
+        type: number
+        example: 1
+        description: "分类属性版本号"
+  ClassTree:
+    type: object
+    properties:
+      id:
+        type: number
+      name:
+        type: string
+      parentId:
+        type: number
+      order:
+        type: string
+      version:
+        type: number
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: number
+            order:
+              type: string
+            ClientClass:
+              type: object
+              properties:
+                name:
+                  type: string
+  ClassAttribute:
+    type: object
+    properties:
+      id:
+        type: number
+      order:
+        type: string
+      paramterGroup:
+        type: string
+      parameterType:
+        type: string
+      controlShap:
+        type: string
+      valueRange:
+        type: object
+        properties:
+          min:
+            type: integer
+          max:
+            type: integer
+          options:
+            type: array
+            items:
+              type: number
+          customize:
+            type: boolean  
+        description: "[可选项] 构件属性值支持的取值范围"
+        example: "{min: 100, max: 200, options: [number | string], customize: boolean}"
+      fixed: 
+        type: boolean
+        default: false
+        description: "是否是只读属性, 默认值: false"
+      Attribute:
+        type: object
+        properties:
+          name:
+            type: string
+          parameterName:
+            type: string
+          comment:
+            type: string
+      attributeTypes:
+        type: array
+        items:
+          type: string
+        example: ["布置属性", "设计属性"]
+        description: "get /attribute/type 接口返回值"
+      
+  Rule:
+    type: object
+    properties:
+      classId:
+        type: integer
+        example: 1
+        description: "构件的ID"
+      rule:
+        type: object
+        example: {}
+        description: "匹配规则的定义"
+      result:
+        type: string
+        example: "area"
+        description: "结果类型"
+      companyId:
+        type: integer
+        example: 1000
+        description: "企业ID"
+      listNormId:
+        type: array
+        items:
+          type: integer
+        example: [1, 2, 3]
+        description: "适用的清单定额的ID集合"
+      comment:
+        type: string
+        example: "备注"
+  ListNorm:
+    type: object
+    properties:
+      parentId:
+        type: integer
+        example: 1
+        description: "父级条目id，或者为null"
+      name:
+        type: string
+        example: "这是一条清单"
+        description: "名称"
+      code:
+        type: string
+        example: "111-222-333"
+        description: "编码"
+      type:
+        type: string
+        example: "清单 | 定额 | 价格"
+        description: "类型：清单 | 定额 | 价格"
+      category:
+        type: string
+        example: "主材 | 辅材 | 人工 | 机械 | 其他"
+        description: "项目：主材 | 辅材 | 人工 | 机械 | 其他"
+      unit:
+        type: string
+        example: "米"
+        description: "单位"
+      loss:
+        type: number
+        format: float
+        example: 1000.58
+        description: "损耗"
+      cost:
+        type: number
+        format: float
+        example: 10000.58
+        description: "成本"
+      price:
+        type: number
+        format: float
+        example: 20000.58
+        description: "售价"
+      attr:
+        type: object
+        example: {}
+        description: "关键字，搜索条件"
+      companyId:
+        type: integer
+        example: 1000
+        description: "企业id"
+      comment:
+        type: string
+        example: "备注"
+      status:
+        type: string
+        example: "Stable"
+        description: "状态"
+  
